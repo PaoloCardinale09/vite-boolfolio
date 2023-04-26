@@ -10,7 +10,7 @@ export default {
   <nav class="navbar bg-light">
     <div class="container">
       <span class="navbar-brand mb-0 h1">Portfolio</span>
-      <div>
+      <div class="d-flex gap-3">
         <router-link :to="{ name: 'home' }" class="nav-link">
           Homepgage
         </router-link>

@@ -4,6 +4,13 @@ export default {
 
   props: {
     project: Object,
+    isDetail: Boolean,
+  },
+
+  computed: {
+    abstract() {
+      return this.project.description.slice(0, 100) + "...";
+    },
   },
 };
 </script>
@@ -12,10 +19,21 @@ export default {
   <div class="card">
     <img :src="project.image" class="card-img-top" alt="..." />
     <div class="card-body">
+      <div>
+        <span class="badge rounded-pill text-bg-primary my-2 me-2">
+          {{ project.type?.label }}
+        </span>
+      </div>
       <h5 class="card-title">{{ project.name }}</h5>
+      <span
+        class="badge text-bg-secondary my-2 me-2"
+        v-for="tech in project.technologies"
+        :key="technology_id"
+      >
+        {{ tech.label }}
+      </span>
       <p class="card-text">
-        {{ project.description }}
-        {{ project.image }}
+        {{ isDetail ? project.description : abstract }}
       </p>
     </div>
     <ul class="list-group list-group-flush">
@@ -27,6 +45,7 @@ export default {
     </ul>
 
     <router-link
+      v-if="!isDetail"
       class="btn btn-primary btn-sm"
       :to="{
         name: 'project-detail',
