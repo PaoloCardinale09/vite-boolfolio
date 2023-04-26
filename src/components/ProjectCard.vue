@@ -1,6 +1,7 @@
 <script>
 export default {
   name: "ProjectCard",
+
   props: {
     project: Object,
   },
@@ -24,10 +25,17 @@ export default {
       <li class="list-group-item">{{ project.created_at }}</li>
       <li class="list-group-item">{{ project.updated_at }}</li>
     </ul>
-    <!-- <div class="card-body">
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-            </div> -->
+
+    <router-link
+      class="btn btn-primary btn-sm"
+      :to="{
+        name: 'project-detail',
+        params: {
+          id: project.id,
+        },
+      }"
+      >Details</router-link
+    >
   </div>
 </template>
 
