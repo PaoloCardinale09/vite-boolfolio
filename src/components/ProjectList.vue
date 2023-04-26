@@ -1,23 +1,47 @@
 <script>
 import ProjectCard from "./ProjectCard.vue";
+import AppPagination from "./AppPagination.vue";
+import axios from "axios";
 export default {
-  props: {
-    projects: Array,
-    list: Array,
-    pages: Array,
+  data() {
+    return {
+      title: "Project List",
+      projects: {
+        list: [],
+        pages: [],
+      },
+    };
   },
 
   components: {
     ProjectCard,
+    AppPagination,
+  },
+
+  emits: ["changePage"],
+
+  methods: {
+    fetchProjects(endpoint = null) {
+      if (!endpoint) endpoint = "http://127.0.0.1:8000/api/projects";
+      axios.get(endpoint).then((response) => {
+        this.projects.list = response.data.data;
+        this.projects.pages = response.data.links;
+      });
+    },
+  },
+
+  created() {
+    this.fetchProjects();
   },
 };
 </script>
 
 <template>
   <section>
-    <div v-if="projects.length" class="row g-4">
+    <h1 class="my-4">{{ title }}</h1>
+    <div v-if="projects.list.length" class="row g-4">
       <ProjectCard
-        v-for="project in projects"
+        v-for="project in projects.list"
         :key="project.id"
         :project="project"
         class="col-4 d-flex"
@@ -26,22 +50,7 @@ export default {
 
     <h2 v-else class="text-muted">Non ci sono progetti</h2>
 
-    <nav aria-label="Project pagination">
-      <ul class="pagination my-3">
-        <li v-for="page in pages" class="page-item">
-          <button
-            type="button"
-            class="page-link"
-            @click="$emit('changePage', page.url)"
-            :class="{
-              disabled: !page.url,
-              active: page.active,
-            }"
-            v-html="page.label"
-          ></button>
-        </li>
-      </ul>
-    </nav>
+    <AppPagination :pages="projects.pages" @changePage="fetchProjects" />
   </section>
 </template>
 
